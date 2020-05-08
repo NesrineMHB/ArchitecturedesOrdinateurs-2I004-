@@ -1,0 +1,25 @@
+.data
+	tab: .word 5, 6, 7, 4, -1
+	v: .word 4
+.text
+	lui $3 0x1001
+	lw $4 0($3) #recuperation de tab[0]
+	lw $7 20($3) # $7 = v
+	or $5 $5 $0 #compteur = 0
+boucle :
+	bltz $4 fin_boucle
+	slt $8 $4 $7 #si tab[i] < var, $8 = 1
+	beqz $8 fin_si
+	addi $5 $5 1 #compteur++
+fin_si:
+	lw $4 4($3)
+	addi $3 $3 4
+	
+
+	j boucle
+fin_boucle:
+	or $4 $0 $5
+	ori $2 $0 1
+	syscall
+	ori $2 $0 10
+	syscall 

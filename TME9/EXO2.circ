@@ -1,0 +1,67 @@
+.data
+	n: .word 5
+	espace : .asciiz " "
+	etoile : .asciiz "*"
+	image : .space 60
+	fin_car : .asciiz ""
+	# @image =0x1001 0008
+.text
+ 	lui $3, 0x1001
+ 	ori $3, $3, 0x0008 # $3 = 0x1001 0008 
+ 	xor $5,$5,$5 #$5 = i
+ 	xor $6,$6,$6 #$6 = j
+ 	lw $10, -8($3) # $10 = n
+ 	addi $11, $0, 12
+ 	lb $24, -2($3) #$24 = etoile
+ 	lb $25, -4($3) #$25 = espace
+ 	addi $26, $0, 0xA
+ 	sll $9, $10, 1 # $9 = 2*n
+ 	addi $9, $9, 1 #$9 = 2*n+1
+ 	start_for_i:
+ 		
+ 		mult $5,$11 #12*i
+ 		mflo $4
+ 		add $4, $3, $4 # $4 = 0x1001 0008 + $5 *12 @image[i][0]
+ 		slt $13, $5, $10 # i< n
+ 		beq $13, $0, end_for_i # si i n'est pas plus peit que n on va à la fin
+ 		xor $6, $6, $6 # j =0 à chaque tour de boucle for i
+ 		sub $14, $10, $5 # $14 = n - i
+ 		addi $8, $5, 1 #$8 = i+1
+ 		add $8, $8, $10 #8 = n+i+1
+ 			
+ 			start_for_j1:
+ 				slt $13,  $6, $14 # j <  n - i
+ 				beq $13, $0, end_for_j1 #si c'est faux allez à la fin
+ 				add $16, $4, $6 #$16 = @image[i][j]
+ 				sb $25, 0($16) #image[i][j] = $25 espace
+ 				
+ 				sub $7, $9, $6 # $7 = 2*n - j +1
+ 				addi $7, $7, -1 # $7 = 2*n - j
+ 				add $18, $4, $7 #$16 = @image[i][2*n-j]
+ 				sb $25, 0($18) #image[i][2*n - j] = espace
+ 				addi $6, $6,1 #j = j+1
+ 				j start_for_j1
+ 			end_for_j1:
+ 			# $6 =n - i
+ 			start_for_j2:
+ 				slt $13, $6, $8 # j< n+ i +1
+ 				beq $13, $0, end_for_j2
+ 				add $16, $4, $6 #$16 = @image[i][j]
+ 				sb $24, 0($16)
+ 				addi $6, $6, 1
+ 				j start_for_j2
+ 			end_for_j2:
+ 		#j = n+i+1
+ 		add $19, $4, $9 #$16 = @image[i][2*n+1]
+ 		sb $26, 0($19)
+ 		addi $5, $5, 1
+ 		j start_for_i
+ 	end_for_i:
+ 	ori $2, $0, 4
+ 	lui $4,0x1001
+ 	ori $4,$4, 0x0008
+ 	syscall
+ 	ori $2, $0, 10
+ 	syscall
+ 	
+

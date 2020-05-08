@@ -1,0 +1,25 @@
+.data
+tab: .byte 0x31 0x32 0x33 0x34 0x35 0x36 0x00
+
+.text
+lui $3 0x1001
+
+ori $2 $0 4
+ori $4 $3 0
+syscall
+
+ori $2 $0 11
+ori $4 $0 0xA
+syscall
+
+lb $5 2($3)
+
+ori $2 $0 1
+ori $4 $5 0
+syscall
+
+
+#reponse a la derniere question: (51)d = 3 + 3x16 = (33)h
+
+ori $2 $0 10
+syscall

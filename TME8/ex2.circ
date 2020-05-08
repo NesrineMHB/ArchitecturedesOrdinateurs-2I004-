@@ -1,0 +1,19 @@
+.data
+.text
+	addi $4 $0 123 #$4 = a
+	addi $5 $0 245 #$5 = b
+boucle :
+	beq $4 $5 fin_boucle
+	slt $6 $5 $4 #$6=1 si b<a
+	beqz $6 else
+	sub $4 $4 $5 
+	j boucle
+else:
+	sub $5 $5	 $4
+	j boucle
+fin_boucle:
+	ori $2 $0 1
+	syscall
+	ori $2 $0 10
+	syscall
+	

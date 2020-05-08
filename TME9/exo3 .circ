@@ -1,0 +1,76 @@
+.data
+
+
+N: .word 5
+A: 	.word 11 15 19 1 0 
+	.word 1 1 1 1 1 
+	.word 3 3 1 3 2
+	.word 1 2 10 9 8
+	.word 0 0 0 0 0 
+	
+B: 	.word 7 8 5 2 0 
+	.word 1 4 7 8  2 
+	.word 7 7 7 7 7 
+	.word 5 5 2 6 2
+	.word 1 1 1 2 8
+
+.text
+
+lui $20 0x1001	
+lw $21 0($20)	
+addi $22 $20 4 	
+mult $21 $21
+mflo $23	
+ori $24 $0 4
+mult $23 $24	
+mflo $25
+add $26 $22 $25 
+add $27 $26 $25 
+ori $5 $0 0 #i
+
+
+boucle1:
+beq $5 $21 fin1
+ori $6 $0 0 #j
+
+boucle2:
+beq $6 $21 fin2
+lw $7 0($22)
+lw $8 0($26)
+add $9 $7 $8
+sw $9 0($27)
+jal valeur
+jal espace	
+addi $6 $6 1
+addi $22 $22 4
+addi $26 $26 4
+addi $27 $27 4
+j boucle2
+
+fin2:
+jal antislash
+addi $5 $5 1
+j boucle1
+
+fin1:
+ori $2 $0 10
+syscall
+
+
+antislash:
+	ori $2 $0 11
+	ori $4 $0 '\n'
+	syscall
+	jr $31
+
+espace:
+	ori $2 $0 11
+	ori $4 $0 ' '
+	syscall
+	jr $31
+valeur:
+	ori $2 $0 1
+	lw $4 0($27)
+	syscall
+	jr $31
+	

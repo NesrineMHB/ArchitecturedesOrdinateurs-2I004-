@@ -1,0 +1,9 @@
+.text
+
+#lecture d'un entier
+ori $2 , $0, 5 # Lire un entier sur la console
+syscall
+#Valeur de retour (dans $2 après l'appel) : l'entier lu
+#pour avoir lentier et faire des operations sur ce dernier on a qu'a acceder au registre 2
+ori $2 , $0, 10
+syscall

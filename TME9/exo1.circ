@@ -1,0 +1,40 @@
+.data 
+ch : .space 11
+.text
+#$3=nb $5=q $6=r 
+xor $7 ,$7, $7 #cpt=0
+ori  $2 $0 5
+syscall
+
+or $3 $0 $2 
+or $5,$3 ,$0 #q=nb
+ori $10 $0 10 # $10=10
+boucle :
+	div  $5 $10
+	mflo $5 #$5=q/10
+	addi $7 $7 1
+	beq $5 $0 fin_boucle
+	j boucle
+
+fin_boucle:
+	lui $8 0x1001
+	add $9 $8 $7
+	sb $0 0($9)#ch[cpt] = 0
+	or $5,$3 ,$0 #q=nb
+boucle2:
+	div  $5 $10
+	mfhi $6
+	div  $5 $10
+	mflo $5 #$5=q/10
+	addi $7 $7  -1
+	add $9 $8 $7
+	addi $1 $6 0x30
+	sb $1 0($9)#ch[cpt] = r + 0x30
+	blez $7 fin_boucle2
+	j boucle2
+fin_boucle2:
+	or $4 $0 $8
+	ori $2 $0 4
+	syscall
+	ori $2 $0 10
+	syscall
